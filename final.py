@@ -5,6 +5,8 @@ import librosa
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
+
 
 # ==========================================
 # 1. KONFIGURASI DATASET
@@ -102,6 +104,10 @@ for test_size in SKENARIO_SPLIT:
     # D. HITUNG AKURASI
     accuracy = accuracy_score(y_test, y_pred)
     print(f"--> Akurasi: {accuracy * 100:.2f}%")
+
+    # [TAMBAHAN BARU] Tampilkan Precision, Recall, F1-Score
+    print("\nLaporan Klasifikasi Lengkap:")
+    print(classification_report(y_test, y_pred, target_names=['Maine Coon', 'Persia']))
     
     # E. SIMPAN HASIL DETIL KE CSV (UNTUK LAPORAN)
     # Membuat tabel perbandingan Label Asli vs Prediksi

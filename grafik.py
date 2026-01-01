@@ -19,7 +19,7 @@ def simpan_grafik_sinyal(file_path, judul, nama_output, lakukan_trim=False):
         
         # 2. Proses Silence Removal (Jika diminta)
         if lakukan_trim:
-            # top_db=60 berarti memotong suara di bawah desibel tertentu (dianggap hening)
+            # top_db=20 berarti memotong suara di bawah desibel tertentu (dianggap hening)
             y, _ = librosa.effects.trim(y, top_db=20) 
             judul = f"{judul} (Setelah Silence Removal)"
         
