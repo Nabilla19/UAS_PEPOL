@@ -1,51 +1,64 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 # ==========================================
-# 1. DATA HASIL PENGUJIAN (REAL)
+# 1. INPUT DATA HASIL PENGUJIAN (EDIT DISINI)
 # ==========================================
-# Data ini diambil dari hasil run terminal kamu sebelumnya
-skenario = ['70 : 30', '80 : 20', '90 : 10']
-akurasi = [93.33, 95.00, 90.00] 
+# Masukkan angka dari hasil run terminalmu!
+# Urutan: [Skenario 70:30, Skenario 80:20, Skenario 90:10]
 
-# ==========================================
-# 2. KONFIGURASI GRAFIK
-# ==========================================
-plt.figure(figsize=(8, 5)) # Ukuran gambar (Lebar x Tinggi)
+data_hasil = {
+    'Akurasi':   [93.33, 95.00, 90.00],  # Ganti dengan angka aslimu
+    'Presisi':   [94.74, 96.15, 92.86]   # Ganti dengan angka aslimu
+}
 
-# Membuat Bar Chart dengan warna berbeda tiap batang
-warna_bar = ['#4c72b0', '#55a868', '#c44e52'] # Biru, Hijau, Merah
-bars = plt.bar(skenario, akurasi, color=warna_bar, width=0.6, zorder=3)
-
-# Judul dan Label Sumbu
-plt.title('Grafik Perbandingan Akurasi Klasifikasi SVM\n(Persia vs Maine Coon)', fontsize=14, fontweight='bold', pad=15)
-plt.xlabel('Skenario Pembagian Data (Latih : Uji)', fontsize=12, labelpad=10)
-plt.ylabel('Akurasi (%)', fontsize=12, labelpad=10)
-
-# Mengatur batas sumbu Y agar tampilan rapi (0 sampai 110)
-plt.ylim(0, 110)
+labels_skenario = ['70 : 30', '80 : 20', '90 : 10']
 
 # ==========================================
-# 3. MENAMPILKAN ANGKA DI ATAS BATANG
+# 2. KONFIGURASI GRAFIK GROUPED BAR
 # ==========================================
-for bar in bars:
-    tinggi = bar.get_height()
-    # Menulis angka persentase tepat di atas batang
-    plt.text(bar.get_x() + bar.get_width()/2., tinggi + 2,
-             f'{tinggi}%', 
-             ha='center', va='bottom', fontsize=11, fontweight='bold')
+plt.figure(figsize=(9, 6)) # Ukuran gambar
+
+x = np.arange(len(labels_skenario))  # Lokasi label sumbu X
+width = 0.35  # Lebar batang (lebih lebar karena cuma 2 batang)
+
+# Membuat 2 batang berdampingan
+rects1 = plt.bar(x - width/2, data_hasil['Akurasi'], width, label='Akurasi', color='#4c72b0') # Biru
+rects2 = plt.bar(x + width/2, data_hasil['Presisi'], width, label='Presisi', color='#55a868') # Hijau
 
 # ==========================================
-# 4. FINISHING & SIMPAN
+# 3. LABEL DAN JUDUL
 # ==========================================
-# Menambah garis bantu horizontal (grid) di belakang batang
-plt.grid(axis='y', linestyle='--', alpha=0.5, zorder=0)
+plt.ylabel('Nilai Persentase (%)', fontsize=12)
+plt.xlabel('Skenario Pembagian Data', fontsize=12, labelpad=10)
+plt.title('Perbandingan Akurasi & Presisi Model SVM', fontsize=14, fontweight='bold', pad=20)
+plt.xticks(x, labels_skenario, fontsize=11)
+plt.ylim(0, 115)  # Batas atas sumbu Y supaya angka tidak kepotong
+plt.legend(loc='lower center', bbox_to_anchor=(0.5, 1.02), ncol=2) # Posisi legenda di atas
+plt.grid(axis='y', linestyle='--', alpha=0.3)
 
-plt.tight_layout() # Merapikan margin otomatis
+# ==========================================
+# 4. FUNGSI MENAMPILKAN ANGKA DI ATAS BATANG
+# ==========================================
+def autolabel(rects):
+    """Menempelkan label angka di atas setiap batang"""
+    for rect in rects:
+        height = rect.get_height()
+        plt.annotate(f'{height}%',
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # Jarak teks dari batang
+                    textcoords="offset points",
+                    ha='center', va='bottom', fontsize=10, fontweight='bold')
 
-# Simpan ke file gambar
-nama_file = 'grafik_akurasi_final.png'
-plt.savefig(nama_file, dpi=300) 
+autolabel(rects1)
+autolabel(rects2)
 
-print(f"BERHASIL! Gambar grafik tersimpan dengan nama: {nama_file}")
-print("Silakan buka folder proyek dan masukkan gambar tersebut ke Laporan Word.")
+# ==========================================
+# 5. SIMPAN DAN TAMPILKAN
+# ==========================================
+plt.tight_layout()
+nama_file = 'grafik_akurasi_presisi_final.png'
+plt.savefig(nama_file, dpi=300)
+
+print(f"BERHASIL! Grafik tersimpan sebagai: {nama_file}")
 plt.show()
